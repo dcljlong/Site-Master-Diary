@@ -35,6 +35,7 @@ export default [
       "unused-imports": pluginUnusedImports,
     },
     rules: {
+      "linebreak-style": ["error", "unix"],
       "no-unused-vars": "off",
       "react/jsx-uses-vars": "error",
       "react/jsx-uses-react": "error",
