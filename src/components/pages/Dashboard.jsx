@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { 
   Plus, Search, Moon, Sun, FileDown, RefreshCw, 
   Briefcase, Calendar, BarChart3, Settings
