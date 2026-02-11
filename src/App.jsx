@@ -1,4 +1,4 @@
-import { Toaster } from "./components/ui/toaster";
+﻿import { Toaster } from "./components/ui/toaster";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClientInstance } from "./components/lib/query-client";
 import NavigationTracker from "./components/lib/NavigationTracker";
@@ -20,12 +20,7 @@ const LayoutWrapper = ({ children, currentPageName }) =>
   );
 
 const AuthenticatedApp = () => {
-  const {
-    isLoadingAuth,
-    isLoadingPublicSettings,
-    authError,
-    navigateToLogin,
-  } = useAuth();
+  const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
 
   if (isLoadingPublicSettings || isLoadingAuth) {
     return (
@@ -78,7 +73,12 @@ function App() {
   return (
     <AuthProvider>
       <QueryClientProvider client={queryClientInstance}>
-        <Router>
+        <Router
+          future={{
+            v7_startTransition: true,
+            v7_relativeSplatPath: true,
+          }}
+        >
           <NavigationTracker />
           <AuthenticatedApp />
         </Router>

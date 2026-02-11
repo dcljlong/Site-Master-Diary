@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+﻿import React, { createContext, useState, useContext, useEffect } from 'react';
 import { base44 } from '../../api/base44Client';
 import { appParams } from './app-params';
 import { createAxiosClient } from '@base44/sdk/dist/utils/axios-client';
@@ -11,38 +11,49 @@ export const AuthProvider = ({ children }) => {
   const [isLoadingAuth, setIsLoadingAuth] = useState(true);
   const [isLoadingPublicSettings, setIsLoadingPublicSettings] = useState(true);
   const [authError, setAuthError] = useState(null);
-  const [appPublicSettings, setAppPublicSettings] = useState(null); // Contains only { id, public_settings }
+  const [appPublicSettings, setAppPublicSettings] = useState(null); // { id, public_settings }
 
   useEffect(() => {
     checkAppState();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const checkAppState = async () => {
-    // LOCAL DEV MODE: no Base44 appId configured (no .env and no ?app_id= in URL)
-    // Allow the UI to run offline without calling Base44 endpoints.
-    if (!appParams?.appId) {
-      setAppPublicSettings({ id: "local", public_settings: {} });
+    // HARD LOCK: LOCAL DEV MODE disables all Base44 network/auth behavior
+    if (appParams?.localDevMode) {
+      setAppPublicSettings({ id: 'local', public_settings: {} });
       setAuthError(null);
       setIsLoadingPublicSettings(false);
       setIsLoadingAuth(false);
       setIsAuthenticated(false);
+      setUser(null);
       return;
     }
+
+    // Legacy behavior: if no appId, still treat as local/offline
+    if (!appParams?.appId) {
+      setAppPublicSettings({ id: 'local', public_settings: {} });
+      setAuthError(null);
+      setIsLoadingPublicSettings(false);
+      setIsLoadingAuth(false);
+      setIsAuthenticated(false);
+      setUser(null);
+      return;
+    }
+
     try {
       setIsLoadingPublicSettings(true);
       setAuthError(null);
 
       const appClient = createAxiosClient({
-        baseURL: "/api/apps/public",
-        headers: {
-          'X-App-Id': appParams.appId
-        },
+        baseURL: '/api/apps/public',
+        headers: { 'X-App-Id': appParams.appId },
         token: appParams.token,
-        interceptResponses: true
+        interceptResponses: true,
       });
 
       try {
-        const publicSettings = await appClient.get("/prod/public-settings/by-id/" + appParams.appId);
+        const publicSettings = await appClient.get('/prod/public-settings/by-id/' + appParams.appId);
         setAppPublicSettings(publicSettings);
 
         if (appParams.token) {
@@ -50,6 +61,7 @@ export const AuthProvider = ({ children }) => {
         } else {
           setIsLoadingAuth(false);
           setIsAuthenticated(false);
+          setUser(null);
         }
         setIsLoadingPublicSettings(false);
       } catch (appError) {
@@ -70,16 +82,28 @@ export const AuthProvider = ({ children }) => {
 
         setIsLoadingPublicSettings(false);
         setIsLoadingAuth(false);
+        setIsAuthenticated(false);
+        setUser(null);
       }
     } catch (error) {
       console.error('Unexpected error:', error);
       setAuthError({ type: 'unknown', message: error.message || 'An unexpected error occurred' });
       setIsLoadingPublicSettings(false);
       setIsLoadingAuth(false);
+      setIsAuthenticated(false);
+      setUser(null);
     }
   };
 
   const checkUserAuth = async () => {
+    // HARD LOCK: never call Base44 auth in LOCAL DEV MODE
+    if (appParams?.localDevMode) {
+      setIsLoadingAuth(false);
+      setIsAuthenticated(false);
+      setUser(null);
+      return;
+    }
+
     try {
       setIsLoadingAuth(true);
       const currentUser = await base44.auth.me();
@@ -90,6 +114,7 @@ export const AuthProvider = ({ children }) => {
       console.error('User auth check failed:', error);
       setIsLoadingAuth(false);
       setIsAuthenticated(false);
+      setUser(null);
 
       if (error.status === 401 || error.status === 403) {
         setAuthError({ type: 'auth_required', message: 'Authentication required' });
@@ -98,6 +123,13 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = (shouldRedirect = true) => {
+    // HARD LOCK: no-op in LOCAL DEV MODE
+    if (appParams?.localDevMode) {
+      setUser(null);
+      setIsAuthenticated(false);
+      return;
+    }
+
     setUser(null);
     setIsAuthenticated(false);
 
@@ -109,21 +141,25 @@ export const AuthProvider = ({ children }) => {
   };
 
   const navigateToLogin = () => {
+    // HARD LOCK: no-op in LOCAL DEV MODE
+    if (appParams?.localDevMode) return;
     base44.auth.redirectToLogin(window.location.href);
   };
 
   return (
-    <AuthContext.Provider value={{
-      user,
-      isAuthenticated,
-      isLoadingAuth,
-      isLoadingPublicSettings,
-      authError,
-      appPublicSettings,
-      logout,
-      navigateToLogin,
-      checkAppState
-    }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        isAuthenticated,
+        isLoadingAuth,
+        isLoadingPublicSettings,
+        authError,
+        appPublicSettings,
+        logout,
+        navigateToLogin,
+        checkAppState,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
