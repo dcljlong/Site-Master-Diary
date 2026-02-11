@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from "@/components/ui/button";
+import { Button } from "../ui/button";
 import { ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
+import { createPageUrl } from "../utils";
 
-import { useTheme } from '../components/ui/ThemeContext';
-import { JobsAPI, TasksAPI, TimeEntriesAPI } from '../components/db/database';
-import ProgressChart from '../components/charts/ProgressChart';
+import { useTheme } from '../ui/ThemeContent';
+import { JobsAPI, TasksAPI, TimeEntriesAPI } from '../db/database';
+import ProgressChart from '../charts/ProgressChart';
 
 export default function Reports() {
   const { darkMode, settings } = useTheme();
@@ -56,7 +56,7 @@ export default function Reports() {
         {loading ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {[1, 2, 3, 4].map(i => (
-              <div 
+              <div
                 key={i}
                 className={`h-80 rounded-lg animate-pulse ${darkMode ? 'bg-gray-800' : 'bg-gray-200'}`}
               />
@@ -74,9 +74,9 @@ export default function Reports() {
 
       {/* Footer */}
       <footer className={`py-6 text-center ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
-        <a 
-          href="https://github.com/dcljlong" 
-          target="_blank" 
+        <a
+          href="https://github.com/dcljlong"
+          target="_blank"
           rel="noopener noreferrer"
           className="hover:text-cyan-500 transition-colors"
         >

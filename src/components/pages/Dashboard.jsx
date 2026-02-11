@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Button } from "@/components/ui/button";
-import { 
-  Plus, Search, Moon, Sun, FileDown, RefreshCw, 
+import { Button } from "../ui/button";
+import {
+  Plus, Search, Moon, Sun, FileDown, RefreshCw,
   Briefcase, Calendar, BarChart3, Settings
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
+import { createPageUrl } from "../utils";
 
-import { useTheme } from '../components/ui/ThemeContext';
-import { JobsAPI, TasksAPI, OrdersAPI, ToolsAPI, TimeEntriesAPI, LogsAPI, InventoryAPI, CrewAPI } from '../components/db/database';
-import DashboardStats from '../components/dashboard/DashboardStats';
-import JobCard from '../components/dashboard/JobCard';
-import JobForm from '../components/forms/JobForm';
-import GlobalSearch from '../components/search/GlobalSearch';
-import { generateFullReport, downloadPDF } from '../components/export/PDFExport';
+import { useTheme } from "../ui/ThemeContent";
+import { JobsAPI, TasksAPI, OrdersAPI, ToolsAPI, TimeEntriesAPI, LogsAPI, InventoryAPI, CrewAPI } from "../db/database";
+import DashboardStats from "../dashboard/DashboardStats";
+import JobCard from "../dashboard/JobCard";
+import JobForm from "../forms/JobForm";
+import GlobalSearch from "../search/GlobalSearch";
+import { generateFullReport, downloadPDF } from "../export/PDFExport";
 
 export default function Dashboard() {
   const { darkMode, toggleDarkMode, settings } = useTheme();
@@ -26,7 +26,7 @@ export default function Dashboard() {
   const [logs, setLogs] = useState([]);
   const [inventory, setInventory] = useState([]);
   const [crew, setCrew] = useState([]);
-  
+
   const [loading, setLoading] = useState(true);
   const [showJobForm, setShowJobForm] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
@@ -88,14 +88,14 @@ export default function Dashboard() {
   } : {};
 
   return (
-    <div 
+    <div
       className={`min-h-screen ${darkMode ? 'bg-gray-900' : 'bg-gray-50'} transition-colors duration-300`}
       style={backgroundStyle}
     >
       {settings?.panoramicBackground && (
         <div className={`fixed inset-0 ${darkMode ? 'bg-gray-900/80' : 'bg-white/70'}`} />
       )}
-      
+
       <div className="relative z-10">
         {/* Header */}
         <header className={`sticky top-0 z-20 ${darkMode ? 'bg-gray-800/95' : 'bg-white/95'} backdrop-blur border-b ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
@@ -110,33 +110,33 @@ export default function Dashboard() {
                   </h1>
                 )}
               </div>
-              
+
               <div className="flex items-center gap-2">
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   size="icon"
                   onClick={() => setShowSearch(true)}
                   className="dark:border-gray-600"
                 >
                   <Search className="w-4 h-4" />
                 </Button>
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   size="icon"
                   onClick={toggleDarkMode}
                   className="dark:border-gray-600"
                 >
                   {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
                 </Button>
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   size="icon"
                   onClick={loadData}
                   className="dark:border-gray-600"
                 >
                   <RefreshCw className="w-4 h-4" />
                 </Button>
-                <Button 
+                <Button
                   variant="outline"
                   onClick={handleExportAll}
                   className="dark:border-gray-600"
@@ -204,7 +204,7 @@ export default function Dashboard() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <DashboardStats 
+            <DashboardStats
               jobs={jobs}
               tasks={tasks}
               orders={orders}
@@ -237,7 +237,7 @@ export default function Dashboard() {
           {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {[1, 2, 3, 4, 5, 6].map(i => (
-                <div 
+                <div
                   key={i}
                   className={`h-64 rounded-lg animate-pulse ${darkMode ? 'bg-gray-800' : 'bg-gray-200'}`}
                 />
@@ -254,7 +254,7 @@ export default function Dashboard() {
               </Button>
             </div>
           ) : (
-            <motion.div 
+            <motion.div
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -283,9 +283,9 @@ export default function Dashboard() {
 
         {/* Footer */}
         <footer className={`py-6 text-center ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
-          <a 
-            href="https://github.com/dcljlong" 
-            target="_blank" 
+          <a
+            href="https://github.com/dcljlong"
+            target="_blank"
             rel="noopener noreferrer"
             className="hover:text-cyan-500 transition-colors"
           >

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import Logo3D from '../components/3d/Logo3D';
-import { createPageUrl } from '@/utils';
+﻿import React, { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import Logo3D from "../3d/Logo3D";
+import { createPageUrl } from "../utils";
 
 export default function Splash() {
   const [showSplash, setShowSplash] = useState(true);
@@ -9,7 +9,7 @@ export default function Splash() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowSplash(false);
-      window.location.href = createPageUrl('Dashboard');
+      window.location.href = createPageUrl("Dashboard");
     }, 4000);
     return () => clearTimeout(timer);
   }, []);
@@ -37,7 +37,10 @@ export default function Splash() {
             transition={{ delay: 0.5, duration: 0.6 }}
             className="mt-6 text-center"
           >
-            <p className="text-gray-400 text-lg">Construction Site Management</p>
+            <p className="text-gray-400 text-lg">
+              Construction Site Management
+            </p>
+
             <motion.div
               className="mt-8 flex items-center gap-2"
               initial={{ opacity: 0 }}
@@ -51,12 +54,12 @@ export default function Splash() {
                     className="w-3 h-3 rounded-full bg-cyan-400"
                     animate={{
                       scale: [1, 1.2, 1],
-                      opacity: [0.5, 1, 0.5]
+                      opacity: [0.5, 1, 0.5],
                     }}
                     transition={{
                       duration: 1,
                       repeat: Infinity,
-                      delay: i * 0.2
+                      delay: i * 0.2,
                     }}
                   />
                 ))}
@@ -71,9 +74,9 @@ export default function Splash() {
             transition={{ delay: 2 }}
             className="absolute bottom-6 text-center"
           >
-            <a 
-              href="https://github.com/dcljlong" 
-              target="_blank" 
+            <a
+              href="https://github.com/dcljlong"
+              target="_blank"
               rel="noopener noreferrer"
               className="text-gray-500 hover:text-cyan-400 transition-colors text-sm"
             >
@@ -85,3 +88,4 @@ export default function Splash() {
     </AnimatePresence>
   );
 }
+

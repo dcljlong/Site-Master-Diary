@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { ArrowLeft, Plus, Search, Edit, Trash2, AlertTriangle } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
+import React, { useState, useEffect } from "react";
+import { Button } from "../ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Badge } from "../ui/badge";
+import { Input } from "../ui/input";
+import { ArrowLeft, Plus, Search, Edit, Trash2, AlertTriangle } from "lucide-react";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "../utils";
 
-import { useTheme } from '../components/ui/ThemeContext';
-import { InventoryAPI } from '../components/db/database';
-import InventoryForm from '../components/forms/InventoryForm';
+import { useTheme } from "../ui/ThemeContent";
+import { InventoryAPI } from "../db/database";
+import InventoryForm from "../forms/InventoryForm";
 
 export default function Inventory() {
   const { darkMode } = useTheme();
   const [inventory, setInventory] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
 
@@ -41,46 +41,62 @@ export default function Inventory() {
   };
 
   const handleDelete = async (id) => {
-    if (confirm('Delete this item?')) {
+    if (confirm("Delete this item?")) {
       await InventoryAPI.delete(id);
       loadData();
     }
   };
 
-  const filteredInventory = inventory.filter(item =>
-    item.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.category?.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredInventory = inventory.filter(
+    (item) =>
+      item.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.category?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const lowStockItems = inventory.filter(item => item.quantity <= (item.minStock || 10));
+  const lowStockItems = inventory.filter(
+    (item) => item.quantity <= (item.minStock || 10)
+  );
 
   const categoryColors = {
-    materials: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
-    fasteners: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
-    electrical: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
-    plumbing: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-300',
-    safety: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
-    consumables: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
-    other: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300'
+    materials: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
+    fasteners: "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300",
+    electrical: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300",
+    plumbing: "bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-300",
+    safety: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300",
+    consumables: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
+    other: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300",
   };
 
   return (
-    <div className={`min-h-screen ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
+    <div className={`min-h-screen ${darkMode ? "bg-gray-900" : "bg-gray-50"}`}>
       {/* Header */}
-      <header className={`sticky top-0 z-20 ${darkMode ? 'bg-gray-800' : 'bg-white'} border-b ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+      <header
+        className={`sticky top-0 z-20 ${
+          darkMode ? "bg-gray-800" : "bg-white"
+        } border-b ${darkMode ? "border-gray-700" : "border-gray-200"}`}
+      >
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Link to={createPageUrl('Dashboard')}>
+              <Link to={createPageUrl("Dashboard")}>
                 <Button variant="ghost" size="icon">
                   <ArrowLeft className="w-5 h-5" />
                 </Button>
               </Link>
-              <h1 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h1
+                className={`text-2xl font-bold ${
+                  darkMode ? "text-white" : "text-gray-900"
+                }`}
+              >
                 Inventory
               </h1>
             </div>
-            <Button onClick={() => { setEditingItem(null); setShowForm(true); }}>
+            <Button
+              onClick={() => {
+                setEditingItem(null);
+                setShowForm(true);
+              }}
+            >
               <Plus className="w-4 h-4 mr-2" />
               Add Item
             </Button>
@@ -95,7 +111,9 @@ export default function Inventory() {
             <CardContent className="py-4">
               <div className="flex items-center gap-2 text-orange-600 dark:text-orange-400">
                 <AlertTriangle className="w-5 h-5" />
-                <span className="font-medium">{lowStockItems.length} items are low on stock</span>
+                <span className="font-medium">
+                  {lowStockItems.length} items are low on stock
+                </span>
               </div>
             </CardContent>
           </Card>
@@ -115,33 +133,39 @@ export default function Inventory() {
         {/* Inventory Grid */}
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[1, 2, 3, 4, 5, 6].map(i => (
-              <div 
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div
                 key={i}
-                className={`h-40 rounded-lg animate-pulse ${darkMode ? 'bg-gray-800' : 'bg-gray-200'}`}
+                className={`h-40 rounded-lg animate-pulse ${
+                  darkMode ? "bg-gray-800" : "bg-gray-200"
+                }`}
               />
             ))}
           </div>
         ) : filteredInventory.length === 0 ? (
           <Card className="dark:bg-gray-800 dark:border-gray-700">
             <CardContent className="py-12 text-center">
-              <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
-                {searchTerm ? 'No items found' : 'No inventory items yet. Add your first item.'}
+              <p className={darkMode ? "text-gray-400" : "text-gray-600"}>
+                {searchTerm
+                  ? "No items found"
+                  : "No inventory items yet. Add your first item."}
               </p>
             </CardContent>
           </Card>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredInventory.map(item => (
-              <Card 
-                key={item._id} 
+            {filteredInventory.map((item) => (
+              <Card
+                key={item._id}
                 className={`dark:bg-gray-800 dark:border-gray-700 ${
-                  item.quantity <= (item.minStock || 10) ? 'border-orange-500' : ''
+                  item.quantity <= (item.minStock || 10) ? "border-orange-500" : ""
                 }`}
               >
                 <CardHeader className="pb-2">
                   <div className="flex justify-between items-start">
-                    <CardTitle className="text-lg dark:text-white">{item.name}</CardTitle>
+                    <CardTitle className="text-lg dark:text-white">
+                      {item.name}
+                    </CardTitle>
                     <Badge className={categoryColors[item.category] || categoryColors.other}>
                       {item.category}
                     </Badge>
@@ -150,17 +174,31 @@ export default function Inventory() {
                 <CardContent>
                   <div className="space-y-2">
                     <div className="flex justify-between items-center">
-                      <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      <span
+                        className={`text-sm ${
+                          darkMode ? "text-gray-400" : "text-gray-600"
+                        }`}
+                      >
                         Quantity
                       </span>
-                      <span className={`text-2xl font-bold ${
-                        item.quantity <= (item.minStock || 10) ? 'text-orange-500' : darkMode ? 'text-white' : ''
-                      }`}>
+                      <span
+                        className={`text-2xl font-bold ${
+                          item.quantity <= (item.minStock || 10)
+                            ? "text-orange-500"
+                            : darkMode
+                            ? "text-white"
+                            : ""
+                        }`}
+                      >
                         {item.quantity} {item.unit}
                       </span>
                     </div>
                     {item.location && (
-                      <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      <div
+                        className={`text-sm ${
+                          darkMode ? "text-gray-400" : "text-gray-600"
+                        }`}
+                      >
                         Location: {item.location}
                       </div>
                     )}
@@ -171,18 +209,22 @@ export default function Inventory() {
                       </div>
                     )}
                   </div>
+
                   <div className="flex gap-2 mt-4">
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       size="sm"
-                      onClick={() => { setEditingItem(item); setShowForm(true); }}
+                      onClick={() => {
+                        setEditingItem(item);
+                        setShowForm(true);
+                      }}
                       className="flex-1 dark:border-gray-600"
                     >
                       <Edit className="w-4 h-4 mr-1" />
                       Edit
                     </Button>
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       size="sm"
                       onClick={() => handleDelete(item._id)}
                       className="dark:border-gray-600"
@@ -198,10 +240,10 @@ export default function Inventory() {
       </main>
 
       {/* Footer */}
-      <footer className={`py-6 text-center ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
-        <a 
-          href="https://github.com/dcljlong" 
-          target="_blank" 
+      <footer className={`py-6 text-center ${darkMode ? "text-gray-500" : "text-gray-400"}`}>
+        <a
+          href="https://github.com/dcljlong"
+          target="_blank"
           rel="noopener noreferrer"
           className="hover:text-cyan-500 transition-colors"
         >
@@ -212,7 +254,10 @@ export default function Inventory() {
       {/* Modal */}
       <InventoryForm
         open={showForm}
-        onClose={() => { setShowForm(false); setEditingItem(null); }}
+        onClose={() => {
+          setShowForm(false);
+          setEditingItem(null);
+        }}
         onSave={handleSave}
         initialData={editingItem}
       />

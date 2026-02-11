@@ -1,28 +1,28 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Progress } from "@/components/ui/progress";
+import { Button } from "../ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Badge } from "../ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import { Progress } from "../ui/progress";
 import { 
   ArrowLeft, Edit, Trash2, Plus, FileDown, MapPin, Calendar,
   Clock, CheckSquare, Package, Wrench, FileText
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
+import { createPageUrl } from "../utils";
 import { format } from 'date-fns';
 
-import { useTheme } from '../components/ui/ThemeContext';
+import { useTheme } from "../ui/ThemeContent";
 import { 
   JobsAPI, TasksAPI, OrdersAPI, ToolsAPI, LogsAPI, TimeEntriesAPI, CrewAPI 
-} from '../components/db/database';
-import JobForm from '../components/forms/JobForm';
-import TaskForm from '../components/forms/TaskForm';
-import OrderForm from '../components/forms/OrderForm';
-import ToolForm from '../components/forms/ToolForm';
-import DailyLogForm from '../components/forms/DailyLogForm';
-import { generateJobReport, downloadPDF } from '../components/export/PDFExport';
+} from '../db/database';
+import JobForm from '../forms/JobForm';
+import TaskForm from '../forms/TaskForm';
+import OrderForm from '../forms/OrderForm';
+import ToolForm from '../forms/ToolForm';
+import DailyLogForm from '../forms/DailyLogForm';
+import { generateJobReport, downloadPDF } from '../export/PDFExport';
 
 export default function JobDetail() {
   const { darkMode, settings } = useTheme();
@@ -346,7 +346,7 @@ export default function JobDetail() {
                               {format(new Date(log.date), 'EEEE, MMMM d, yyyy')}
                             </div>
                             <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                              Weather: {log.weather || 'N/A'} | Temp: {log.temperature || 'N/A'}°F | Hours: {log.hoursWorked || 0}
+                              Weather: {log.weather || 'N/A'} | Temp: {log.temperature || 'N/A'}Â°F | Hours: {log.hoursWorked || 0}
                             </div>
                           </div>
                           <div className="flex gap-2">
@@ -425,7 +425,7 @@ export default function JobDetail() {
                             </div>
                             <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                               {task.dueDate && `Due: ${format(new Date(task.dueDate), 'MMM d')}`}
-                              {task.assignedTo && ` • ${task.assignedTo}`}
+                              {task.assignedTo && ` â€¢ ${task.assignedTo}`}
                             </div>
                           </div>
                         </div>
@@ -480,8 +480,8 @@ export default function JobDetail() {
                           <div className={`font-medium ${darkMode ? 'text-white' : ''}`}>{order.item}</div>
                           <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                             Qty: {order.quantity} {order.unit}
-                            {order.supplier && ` • ${order.supplier}`}
-                            {order.expectedDelivery && ` • Expected: ${format(new Date(order.expectedDelivery), 'MMM d')}`}
+                            {order.supplier && ` â€¢ ${order.supplier}`}
+                            {order.expectedDelivery && ` â€¢ Expected: ${format(new Date(order.expectedDelivery), 'MMM d')}`}
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
@@ -536,7 +536,7 @@ export default function JobDetail() {
                           <div>
                             <div className={`font-medium ${darkMode ? 'text-white' : ''}`}>{tool.name}</div>
                             <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                              {tool.serialNumber && `SN: ${tool.serialNumber} • `}
+                              {tool.serialNumber && `SN: ${tool.serialNumber} â€¢ `}
                               {tool.category}
                             </div>
                           </div>
@@ -612,3 +612,6 @@ export default function JobDetail() {
     </div>
   );
 }
+
+
+
